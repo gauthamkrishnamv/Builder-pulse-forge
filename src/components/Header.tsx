@@ -1,4 +1,5 @@
-import { Menu, Search } from "lucide-react";
+import { Menu, Search, X } from "lucide-react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,30 +16,38 @@ export function Header({
   userName,
 }: HeaderProps) {
   const navigate = useNavigate();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const handleAddClick = () => {
     navigate("/add");
   };
 
-  const handleProfileClick = () => {
-    navigate("/profile");
+  const handleMenuClick = () => {
+    setSidebarOpen(true);
+  };
+
+  const handleStatsClick = () => {
+    navigate("/stats");
+    setSidebarOpen(false);
   };
 
   return (
     <header className="flex items-center justify-between p-4 bg-am-cream">
       <div className="flex items-center gap-4">
         {showMenu && (
-          <Button variant="ghost" size="icon" className="text-am-dark">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="text-am-dark"
+            onClick={handleMenuClick}
+          >
             <Menu className="h-5 w-5" />
           </Button>
         )}
 
         {userName && (
           <div className="flex items-center gap-2">
-            <div
-              className="w-8 h-8 rounded-full bg-orange-500 flex items-center justify-center cursor-pointer hover:bg-orange-600 transition-colors"
-              onClick={handleProfileClick}
-            >
+            <div className="w-8 h-8 rounded-full bg-orange-500 flex items-center justify-center">
               <span className="text-sm font-semibold text-white">F</span>
             </div>
             <div>
@@ -77,6 +86,70 @@ export function Header({
           </div>
         </div>
       </div>
+
+      {/* Sidebar Overlay */}
+      {sidebarOpen && (
+        <div className="fixed inset-0 z-50 flex">
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-black/50"
+            onClick={() => setSidebarOpen(false)}
+          />
+
+          {/* Sidebar */}
+          <div className="relative w-80 bg-white shadow-xl">
+            {/* Close Button */}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute top-4 right-4 text-am-dark"
+              onClick={() => setSidebarOpen(false)}
+            >
+              <X className="h-5 w-5" />
+            </Button>
+
+            {/* Sidebar Content */}
+            <div className="p-6">
+              {/* User Info */}
+              <div className="flex items-center gap-4 mb-8 mt-8">
+                <div className="w-12 h-12 rounded-full bg-orange-500 flex items-center justify-center">
+                  <span className="text-lg font-semibold text-white">F</span>
+                </div>
+                <div>
+                  <h2 className="text-lg font-semibold text-am-dark">
+                    Fazil Mohamed
+                  </h2>
+                  <p className="text-sm text-gray-600">
+                    fazilmohamed@contractor.amat.com
+                  </p>
+                </div>
+              </div>
+
+              {/* Navigation Menu */}
+              <nav className="space-y-4">
+                <div>
+                  <h3 className="text-lg font-semibold text-am-dark hover:text-am-blue cursor-pointer transition-colors">
+                    My profile
+                  </h3>
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-am-dark hover:text-am-blue cursor-pointer transition-colors">
+                    Favourites
+                  </h3>
+                </div>
+                <div>
+                  <h3
+                    className="text-lg font-semibold text-am-dark hover:text-am-blue cursor-pointer transition-colors"
+                    onClick={handleStatsClick}
+                  >
+                    Your stats
+                  </h3>
+                </div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 }
