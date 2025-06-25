@@ -46,6 +46,24 @@ export default function Stats() {
 
         <h1 className="text-2xl font-bold text-am-dark mb-8">Your stats</h1>
 
+        {/* Profile Section */}
+        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 mb-8">
+          <div className="flex items-center gap-4">
+            <div className="w-16 h-16 rounded-full bg-orange-500 flex items-center justify-center">
+              <span className="text-2xl font-semibold text-white">F</span>
+            </div>
+            <div>
+              <h2 className="text-xl font-semibold text-am-dark">
+                Fazil Mohamed
+              </h2>
+              <p className="text-gray-600">fazilmohamed@contractor.amat.com</p>
+              <p className="text-sm text-gray-500 mt-1">
+                Engineering Department
+              </p>
+            </div>
+          </div>
+        </div>
+
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           {stats.map((stat, index) => {
