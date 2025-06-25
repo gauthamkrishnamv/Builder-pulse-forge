@@ -7,6 +7,9 @@ import Login from "./pages/Login";
 import Interests from "./pages/Interests";
 import Dashboard from "./pages/Dashboard";
 import VideoDetail from "./pages/VideoDetail";
+import Profile from "./pages/Profile";
+import Add from "./pages/Add";
+import Stats from "./pages/Stats";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -22,6 +25,9 @@ const App = () => (
           <Route path="/interests" element={<Interests />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/video/:id" element={<VideoDetail />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/add" element={<Add />} />
+          <Route path="/stats" element={<Stats />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -1,4 +1,5 @@
 import { Menu, Search } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -13,6 +14,16 @@ export function Header({
   showMenu = false,
   userName,
 }: HeaderProps) {
+  const navigate = useNavigate();
+
+  const handleAddClick = () => {
+    navigate("/add");
+  };
+
+  const handleProfileClick = () => {
+    navigate("/profile");
+  };
+
   return (
     <header className="flex items-center justify-between p-4 bg-am-cream">
       <div className="flex items-center gap-4">
@@ -24,7 +35,10 @@ export function Header({
 
         {userName && (
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-orange-500 flex items-center justify-center">
+            <div
+              className="w-8 h-8 rounded-full bg-orange-500 flex items-center justify-center cursor-pointer hover:bg-orange-600 transition-colors"
+              onClick={handleProfileClick}
+            >
               <span className="text-sm font-semibold text-white">F</span>
             </div>
             <div>
@@ -45,7 +59,10 @@ export function Header({
                 className="pl-10 pr-4 py-2 rounded-full border-2 border-gray-300 bg-white w-64"
               />
             </div>
-            <Button className="bg-am-blue hover:bg-am-blue/90 text-white rounded-full px-6">
+            <Button
+              onClick={handleAddClick}
+              className="bg-am-blue hover:bg-am-blue/90 text-white rounded-full px-6"
+            >
               Add
             </Button>
           </div>
