@@ -31,6 +31,11 @@ export function Header({
     setSidebarOpen(false);
   };
 
+  const handleProfileClick = () => {
+    navigate("/profile");
+    setSidebarOpen(false);
+  };
+
   return (
     <header className="flex items-center justify-between p-4 bg-am-cream">
       <div className="flex items-center gap-4">
@@ -128,7 +133,10 @@ export function Header({
               {/* Navigation Menu */}
               <nav className="space-y-4">
                 <div>
-                  <h3 className="text-lg font-semibold text-am-dark hover:text-am-blue cursor-pointer transition-colors">
+                  <h3
+                    className="text-lg font-semibold text-am-dark hover:text-am-blue cursor-pointer transition-colors"
+                    onClick={handleProfileClick}
+                  >
                     My profile
                   </h3>
                 </div>
