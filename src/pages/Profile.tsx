@@ -1,6 +1,10 @@
+import { useNavigate } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Header } from "@/components/Header";
 
 export default function Profile() {
+  const navigate = useNavigate();
   const userName = localStorage.getItem("userName") || "User";
 
   return (
@@ -8,6 +12,15 @@ export default function Profile() {
       <Header />
 
       <main className="flex">
+        {/* Back Button */}
+        <Button
+          variant="ghost"
+          onClick={() => navigate("/dashboard")}
+          className="absolute top-20 left-4 z-10 text-am-dark hover:bg-white/50"
+        >
+          <ArrowLeft className="h-4 w-4 mr-2" />
+          Back to Home
+        </Button>
         {/* Profile Sidebar */}
         <div className="w-80 bg-white shadow-sm min-h-screen p-6">
           {/* User Info */}
