@@ -62,6 +62,13 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        // Applied Materials Brand Colors
+        "am-blue": {
+          DEFAULT: "hsl(var(--am-blue))",
+          foreground: "hsl(var(--am-blue-foreground))",
+        },
+        "am-cream": "hsl(var(--am-cream))",
+        "am-dark": "hsl(var(--am-dark))",
       },
       borderRadius: {
         lg: "var(--radius)",
