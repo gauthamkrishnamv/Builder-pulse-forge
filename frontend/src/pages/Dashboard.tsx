@@ -1,6 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { VideoCard } from "@/components/VideoCard";
+import { useEffect, useState } from "react";
+
+type VideoMeta = {
+  filename: string;
+  title: string;
+  description: string;
+};
 
 const suggestedVideos = [
   {
@@ -63,6 +70,7 @@ const subscriptionVideos = [
 ];
 
 export default function Dashboard() {
+  const [videos, setVideos] = useState<VideoMeta[]>([]);
   const navigate = useNavigate();
   const userName = localStorage.getItem("userName") || "User";
 
@@ -70,36 +78,34 @@ export default function Dashboard() {
     navigate(`/video/${videoId}`);
   };
 
+  useEffect(() => {
+    fetch("http://localhost:5000/videos")
+      .then(res => res.json())
+      .then(setVideos);
+  }, []);
+
   return (
     <div className="min-h-screen bg-am-cream">
       <Header showSearch showMenu userName={userName} />
 
       <main className="p-6 max-w-7xl mx-auto">
-        {/* Suggested Section */}
-        <section className="mb-8">
-          <h2 className="text-lg font-semibold text-am-dark mb-4">Suggested</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {suggestedVideos.map((video) => (
-              <VideoCard
-                key={video.id}
-                {...video}
-                onClick={() => handleVideoClick(video.id)}
-              />
-            ))}
-          </div>
-        </section>
-
-        {/* Subscriptions Section */}
         <section>
           <h2 className="text-lg font-semibold text-am-dark mb-4">
-            Subscriptions
+            Uploaded Videos
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {subscriptionVideos.map((video) => (
+            {videos.map((video, idx) => (
               <VideoCard
-                key={video.id}
-                {...video}
-                onClick={() => handleVideoClick(video.id)}
+                key={video.filename}
+                id={video.filename} // Use filename as id
+                title={video.title || "Untitled"}
+                thumbnail={""} // You can set a default thumbnail or leave blank
+                duration={""} // If you want to display duration, you need to extract it
+                views={0} // Set to 0 or fetch from backend if available
+                rating={0} // Set to 0 or fetch from backend if available
+                description={video.description}
+                videoUrl={`http://localhost:5000/uploads/${video.filename}`}
+                onClick={() => handleVideoClick(video.filename)}
               />
             ))}
           </div>

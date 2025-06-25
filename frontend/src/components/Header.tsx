@@ -1,8 +1,10 @@
-import { Menu, Search, X } from "lucide-react";
-import { useState } from "react";
+import { Menu, Search, X , Plus} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import myImage from '@/images/image.png';
+import { useEffect, useState } from "react";
+
 
 interface HeaderProps {
   showSearch?: boolean;
@@ -17,6 +19,10 @@ export function Header({
 }: HeaderProps) {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const [videoTitles, setVideoTitles] = useState<{ title: string; filename: string }[]>([]);
+  const [filtered, setFiltered] = useState<{ title: string; filename: string }[]>([]);
+  const [showDropdown, setShowDropdown] = useState(false);
 
   const handleAddClick = () => {
     navigate("/add");
@@ -36,9 +42,50 @@ export function Header({
     setSidebarOpen(false);
   };
 
+  const handleLogoutClick = () => {
+    // Logic for logging out (if any) can be added here
+    navigate("/login"); // Redirect to the login page
+  };
+
+  const [backendMessage, setBackendMessage] = useState("");
+
+  useEffect(() => {
+    fetch("http://localhost:5000/")
+      .then((res) => res.json())
+      .then((data) => setBackendMessage(data.message))
+      .catch((err) => console.error("Backend fetch error:", err));
+  }, []);
+
+  fetch("http://localhost:5000/videos")
+  .then((res) => res.json())
+  .then((videos) =>
+    setVideoTitles(
+      videos.map((v: any) => ({
+        title: v.title,
+        filename: v.filename,
+      }))
+    )
+  )
+  .catch((err) => console.error("Video fetch error:", err));
+  
+  useEffect(() => {
+    if (search.length > 0) {
+      setFiltered(
+        videoTitles.filter(v =>
+          v.title.toLowerCase().includes(search.toLowerCase())
+        )
+      );
+      setShowDropdown(true);
+    } else {
+      setFiltered([]);
+      setShowDropdown(false);
+    }
+  }, [search, videoTitles]);
+
   return (
-    <header className="flex items-center justify-between p-4 bg-am-cream">
+    <header className="relative flex items-center justify-between p-4 bg-am-cream">
       <div className="flex items-center gap-4">
+        
         {showMenu && (
           <Button
             variant="ghost"
@@ -63,33 +110,69 @@ export function Header({
         )}
       </div>
 
-      <div className="flex items-center gap-4">
-        {showSearch && (
-          <div className="flex items-center gap-2">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500" />
-              <Input
-                placeholder="Search"
-                className="pl-10 pr-4 py-2 rounded-full border-2 border-gray-300 bg-white w-64"
-              />
-            </div>
-            <Button
-              onClick={handleAddClick}
-              className="bg-am-blue hover:bg-am-blue/90 text-white rounded-full px-6"
-            >
-              Add
-            </Button>
-          </div>
-        )}
+      {/* <div className="absolute left-1/2 top-2 -translate-x-1/2 text-xs text-gray-500">
+        {backendMessage && `Backend says: ${backendMessage}`}
+      </div> */}
 
-        <div className="bg-am-blue rounded-lg px-4 py-2">
-          <div className="flex items-center gap-2 text-white">
-            <div className="w-6 h-6 bg-white/20 rounded flex items-center justify-center">
-              <div className="w-3 h-3 bg-white rounded-sm"></div>
-            </div>
-            <span className="font-semibold text-sm">APPLIED MATERIALS</span>
-          </div>
+      {/* Centered Search and Add Button */}
+      <div className="flex-grow flex justify-center items-center gap-4">
+        {showSearch && (
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" />
+          <Input
+            placeholder="Search"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            className="pl-10 pr-4 py-2 rounded-full border-2 border-gray-300 bg-white w-64"
+            onFocus={() => search && setShowDropdown(true)}
+            onBlur={() => setTimeout(() => setShowDropdown(false), 100)} // Delay to allow click
+          />
+          {/* Dropdown */}
+          {showDropdown && filtered.length > 0 && (
+            <ul className="absolute left-0 right-0 mt-1 bg-white border rounded shadow z-50 max-h-48 overflow-y-auto">
+              {filtered.map((v) => (
+                <li
+                  key={v.filename}
+                  className="px-4 py-2 hover:bg-am-blue/10 cursor-pointer"
+                  onMouseDown={() => {
+                    setSearch("");
+                    setShowDropdown(false);
+                    navigate(`/video/${v.filename}`);
+                  }}
+                >
+                  {v.title}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
+      )}
+       {/* Add Button */}
+  {showSearch && (
+  <Button
+    className="ml-4 bg-am-blue hover:bg-am-blue/90 text-white rounded-full px-6"
+    onClick={handleAddClick}
+  >
+    <Plus className="h-5 w-5" />
+    Add
+  </Button>
+  )}
+      </div>
+
+      {/* Logout Button and Image positioned at the top right corner */}
+      <div className="flex items-center gap-2 absolute top-4 right-4">
+        <Button
+          onClick={handleLogoutClick}
+          className="bg-am-blue hover:bg-am-blue/90 text-white rounded-full px-6"
+        >
+          Logout
+        </Button>
+        <img 
+          src={myImage} 
+          alt="Description of the image" 
+          style={{ width: '10jen  0px', height: '40px' }} // Adjust size as needed
+          className="rounded-lg" 
+        />
       </div>
 
       {/* Sidebar Overlay */}

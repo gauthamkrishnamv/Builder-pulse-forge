@@ -8,7 +8,9 @@ interface VideoCardProps {
   duration: string;
   views: number;
   rating: number;
+  description: string; 
   className?: string;
+  videoUrl: string;
   onClick?: () => void;
 }
 

@@ -14,6 +14,8 @@ export default function Add() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [uploadStatus, setUploadStatus] = useState<null | string>(null);
+
 
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
@@ -41,12 +43,34 @@ export default function Add() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle file upload logic here
-    console.log("Uploading:", { file: selectedFile, title, description });
-    // Redirect back to dashboard
-    navigate("/dashboard");
+    if (!selectedFile) {
+      setUploadStatus("No file selected.");
+      return;
+    }
+    setUploadStatus("Uploading...");
+    const formData = new FormData();
+    formData.append("video", selectedFile);
+    formData.append("title", title);
+    formData.append("description", description);
+
+    try {
+      const res = await fetch("http://localhost:5000/upload", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setUploadStatus("Upload successful!");
+        // Optionally redirect after upload
+        setTimeout(() => navigate("/dashboard"), 1000);
+      } else {
+        setUploadStatus(data.error || "Upload failed.");
+      }
+    } catch (err) {
+      setUploadStatus("Upload failed. Server error.");
+    }
   };
 
   return (
@@ -65,6 +89,11 @@ export default function Add() {
 
         <h1 className="text-2xl font-bold text-am-dark mb-8">Add your file</h1>
 
+        {uploadStatus && (
+          <div className="mb-4 text-center text-am-blue font-medium">
+            {uploadStatus}
+          </div>
+        )}
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* File Upload Area */}
           <div
