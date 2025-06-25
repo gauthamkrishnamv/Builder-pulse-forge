@@ -16,7 +16,7 @@ export default function Profile() {
         <Button
           variant="ghost"
           onClick={() => navigate("/dashboard")}
-          className="absolute top-20 left-4 z-10 text-am-dark hover:bg-white/50"
+          className="absolute top-4 left-4 z-10 text-am-dark hover:bg-white/50"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back to Home
