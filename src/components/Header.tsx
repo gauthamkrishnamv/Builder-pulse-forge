@@ -32,7 +32,7 @@ export function Header({
   };
 
   const handleProfileClick = () => {
-    navigate("/profile");
+    navigate("/stats");
     setSidebarOpen(false);
   };
 
